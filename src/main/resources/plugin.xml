@@ -20,4 +20,10 @@
          </action>
      </actionSet>
    </extension>
-</plugin>
+   <extension point="com.change_vision.astah.ui.view">
+        <view
+            id="com.change_vision.astah.GalleryView"
+            type="extraTab"
+            class="com.change_vision.astah.internal.view.GalleryView" />
+   </extension>
+ </plugin>
