@@ -277,5 +277,10 @@
       <version>4.10</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+<dependency>
+	<groupId>org.swinglabs</groupId>
+	<artifactId>swingx</artifactId>
+	<version>1.6.1</version>
+</dependency>
+              </dependencies>
 </project>
