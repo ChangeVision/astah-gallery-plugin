@@ -3,7 +3,7 @@ Gallery Plugin for Astah
 
 This plugin shows sample diagrams drawn by Astah.
 
-![sample image](https://github.com/ChangeVision/astah-gallary-plugin/raw/master/doc/pictures/gallery.png)
+![sample image](https://github.com/ChangeVision/astah-gallery-plugin/raw/master/doc/pictures/gallery.png)
 
 Version
 ------------
@@ -19,6 +19,7 @@ This Plugin enables you to show sample diagrams into Astah.
 
 How to install
 ------------
-1. Deploy the jar file in the "plugins" folder under the Astah Install folder
-2. Start Astah
-3. You find that the gallery view has been added in the extra view.
+1. Download the jar file from github's download.
+2. Deploy the jar file in the "plugins" folder under the Astah Install folder
+3. Start Astah
+4. You find that the gallery view has been added in the extra view.
