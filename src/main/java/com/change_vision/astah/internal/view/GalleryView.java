@@ -3,8 +3,12 @@ package com.change_vision.astah.internal.view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,11 +24,14 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 
 import org.jdesktop.swingx.JXImagePanel;
 import org.jdesktop.swingx.JXTaskPane;
@@ -38,6 +45,37 @@ import com.change_vision.jude.api.inf.ui.ISelectionListener;
 @SuppressWarnings("serial")
 public class GalleryView extends JPanel implements IPluginExtraTabView,
 		ProjectEventListener {
+	
+	class DragScrollListener extends MouseAdapter {
+	    private final Cursor defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+	    private final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+	    private final Point pp = new Point();
+	    @Override public void mouseDragged(MouseEvent e) {
+	        final JComponent jc = (JComponent)e.getSource();
+	        Container c = jc.getParent();
+	        if(c instanceof JViewport) {
+	            JViewport vport = (JViewport)c;
+	            Point cp = SwingUtilities.convertPoint(jc,e.getPoint(),vport);
+	            Point vp = vport.getViewPosition();
+	            vp.translate(pp.x-cp.x, pp.y-cp.y);
+	            jc.scrollRectToVisible(new Rectangle(vp, vport.getSize()));
+	            pp.setLocation(cp);
+	        }
+	    }
+	    @Override public void mousePressed(MouseEvent e) {
+	        JComponent jc = (JComponent)e.getSource();
+	        Container c = jc.getParent();
+	        if(c instanceof JViewport) {
+	            jc.setCursor(hndCursor);
+	            JViewport vport = (JViewport)c;
+	            Point cp = SwingUtilities.convertPoint(jc,e.getPoint(),vport);
+	            pp.setLocation(cp);
+	        }
+	    }
+	    @Override public void mouseReleased(MouseEvent e) {
+	        ((JComponent)e.getSource()).setCursor(defCursor);
+	    }
+	}
 
 	private final class OpenGalleryWindowAction extends AbstractAction {
 		
@@ -125,6 +163,9 @@ public class GalleryView extends JPanel implements IPluginExtraTabView,
 		JPanel imagePanel = new JPanel();
 		imagePanel.setLayout(new BorderLayout());
 		imagePanel.add(image);
+		DragScrollListener listener = new DragScrollListener();
+		imagePanel.addMouseMotionListener(listener);
+		imagePanel.addMouseListener(listener);
 		imageScrollPane = new JScrollPane(imagePanel);
 		return imageScrollPane;
 	}
