@@ -3,7 +3,7 @@ Gallery Plugin for Astah
 
 This plugin shows sample diagrams drawn by Astah.
 
-![sample image](https://raw.github.com/ChangeVision/astah-gallary-plugin/master/doc/pictures/gallary.png)
+![sample image](https://github.com/ChangeVision/astah-gallary-plugin/raw/master/doc/pictures/gallery.png)
 
 Version
 ------------
