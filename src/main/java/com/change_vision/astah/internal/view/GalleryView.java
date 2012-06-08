@@ -17,9 +17,14 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 
 import org.jdesktop.swingx.JXImagePanel;
 import org.jdesktop.swingx.JXTaskPane;
@@ -33,6 +38,23 @@ import com.change_vision.jude.api.inf.ui.ISelectionListener;
 @SuppressWarnings("serial")
 public class GalleryView extends JPanel implements IPluginExtraTabView,
 		ProjectEventListener {
+
+	private final class OpenGalleryWindowAction extends AbstractAction {
+		
+		public OpenGalleryWindowAction(){
+			URL url = getClass().getClassLoader().getResource("icons/open.png");
+			putValue(Action.SMALL_ICON, new ImageIcon(url));
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFrame frame = new JFrame("Gallery");
+			frame.setSize(800, 500);
+			frame.setLocationRelativeTo(null);
+			frame.add(new GalleryView(false));
+			frame.setVisible(true);
+		}
+	}
 
 	public class OpenImageAction extends AbstractAction {
 
@@ -56,6 +78,10 @@ public class GalleryView extends JPanel implements IPluginExtraTabView,
 	private JScrollPane imageScrollPane;
 
 	public GalleryView() {
+		this(true);
+	}
+
+	public GalleryView(boolean showToolbar) {
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("imagelist.txt");
 		Reader ir = new InputStreamReader(stream);
 		BufferedReader reader = new BufferedReader(ir);
@@ -66,11 +92,15 @@ public class GalleryView extends JPanel implements IPluginExtraTabView,
 			e.printStackTrace();
 		}
 
-		initComponents();
+		initComponents(showToolbar);
 	}
 
-	private void initComponents() {
+	private void initComponents(boolean showToolbar) {
 		setLayout(new BorderLayout());
+		if(showToolbar){
+			JToolBar bar = createToolBar();
+			add(bar, BorderLayout.NORTH);
+		}
 		JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		add(pane, BorderLayout.CENTER);
 		pane.setLeftComponent(createTaskPaneContainer());
@@ -78,6 +108,16 @@ public class GalleryView extends JPanel implements IPluginExtraTabView,
 		pane.setDividerLocation(300);
 		String path = groups.get(0).getPaths().get(0);
 		setImage(path);
+	}
+
+	private JToolBar createToolBar() {
+		JToolBar bar = new JToolBar("gallery_toolbar");
+		bar.add(Box.createGlue());
+		JButton openButton = new JButton();
+		openButton.setRequestFocusEnabled(false);
+		openButton.setAction(new OpenGalleryWindowAction());
+		bar.add(openButton);
+		return bar;
 	}
 
 	private JScrollPane createImagePaneContainer() {
@@ -174,4 +214,5 @@ public class GalleryView extends JPanel implements IPluginExtraTabView,
 	public void deactivated() {
 
 	}
+	
 }
